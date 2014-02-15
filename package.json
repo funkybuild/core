@@ -1,0 +1,37 @@
+{
+  "name": "core",
+  "version": "0.0.0",
+  "description": "FunkyBuild core project. Functional/promise based generic build system in JavaScript. Stuff starts here and might get migrated to subproject later on.",
+  "main": "funkybuild.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "requirejs": "~2.1.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test/root.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/funkybuild/core.git"
+  },
+  "keywords": [
+    "build",
+    "continuous",
+    "integration",
+    "javascript",
+    "java",
+    "ant",
+    "maven",
+    "gradle",
+    "functional"
+  ],
+  "author": "Daniel Brolund",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/funkybuild/core/issues"
+  },
+  "homepage": "https://github.com/funkybuild/core"
+}
