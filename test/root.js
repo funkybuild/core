@@ -1,14 +1,24 @@
 var requirejs = require('requirejs');
 
 requirejs.config({
-    //Pass the top-level main.js/index.js require
-    //function to requirejs so that node modules
-    //are loaded relative to the top-level JS file.
+    baseUrl: __dirname + '/../src',
     nodeRequire: require
 });
 
-requirejs(['when'],
-function   (when) {
-    when('Hejsan').then(console.log);
+var ok = function(message) {
+    return "|";
+}
+
+var fail = function(message) {
+    return 'F(' + message + ')';
+}
+
+var check = function(promise, assert) {
+    return when(promise).then(assert).then(ok, fail);
+}
+
+requirejs(['when', 'java'], function (when, java) {
+    when(java.src({},'.')).then(function(result) {throw(result);}).then(ok, fail);
+    when(java.src({},'.')).then(function(){}).then(ok, fail);
 });
 
