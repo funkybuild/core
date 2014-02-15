@@ -3,7 +3,6 @@ if (typeof define !== 'function') {
 }
 
 define(['when'], function(when) {
-    //var dep = require('dependency');
 
     var src = function(obj,dirs) {
         obj.dirs = dirs
