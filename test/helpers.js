@@ -24,7 +24,8 @@ define(['when', 'util', 'lodash'], function(when, util, _) {
                 return _.isEqual(arr[0], arr[1])
                     ? ''
                     : when.reject(util.inspect(arr[0]) + ' doesnt match ' + util.inspect(arr[1]));  
-    }).then(ok, fail).always(util.print);};
+            }
+        ).then(ok, fail).always(util.print);};
 
     return {'ok':ok, 'fail': fail, 'check':check, 'equals':equals};
 });
