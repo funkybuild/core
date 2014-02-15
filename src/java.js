@@ -5,7 +5,7 @@ if (typeof define !== 'function') {
 define(['when', 'lodash'], function(when, _) {
 
     var src = function(obj,dirs) {
-        obj.src = _.flatten([dirs]);
+        obj.srcs = _.flatten([dirs]);
         return when(obj);
     }
 
