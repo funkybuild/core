@@ -8,7 +8,7 @@ requirejs.config({
 requirejs(['when', 'java', 'lodash', '../test/helpers', 'util'], 
 function (when, java, _, helpers, util) {
     when.all([
-        helpers.equals(java.src({},'.'), {srcs:['.']}),
+        helpers.equals(java.src('.')({}), {srcs:['.']}),
 
     ]).then(function(){util.puts('');});
 });
