@@ -11,14 +11,13 @@ requirejs.config({
 });
 
 requirejs(
-    ['when', 'java', 'lodash', 'util'], 
-    function (when, java, _, helpers, util) {
+    ['when', 'when/pipeline', 'java', 'lodash', 'util'], 
+    function (when, pipe, java, _, helpers, util) {
         var subproj = java.sdl(__dirname + '/javaroot/subproj');
-        var c = java.compile(subproj);
+        var compile = java.compile({options: ''});
 
-        when(
-            c({version:'0.0.1'})
-        ).then(console.log);
+        pipe([subproj, compile], {}) 
+            .always(console.log);
         
     }
 );

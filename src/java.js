@@ -22,9 +22,9 @@ define(['when', 'lodash'], function(when, _) {
         };
     };
 
-    var compile = function(projfn) {
-        return function(data) {
-            var res = projfn(data);
+    var compile = function(options) {
+        return function(project) {
+            var res = _.merge(project, options);
             
             return when(res);
         };
