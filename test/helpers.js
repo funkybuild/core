@@ -12,8 +12,19 @@ define(['when', 'util', 'lodash'], function(when, util, _) {
         return '\n* ' + description + ':\n\t' + message;
     }
 
-    var check = function(promise, assert) {
-        return when(promise).then(assert, fail).then(ok, fail).always(util.print);
+    var check = function(arr) {
+        when.settle(arr).then(function(desc) {
+            var failed = _.any(desc, function(v) {return v.state=='rejected';});
+            
+            if(failed) util.puts("Failed checks")
+            else util.puts("Checks PASSED!");
+            
+            _.forEach(desc, function(d) {
+                d.state=='rejected'
+                    ? util.print(d.reason)
+                    : util.print(d.value);
+            });
+        }, console.err).then(function() {util.puts('\n---');}, console.err);
     }
 
     var equals = function(description, actual, args, expected) {
