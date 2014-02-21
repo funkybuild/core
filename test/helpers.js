@@ -5,11 +5,11 @@ if (typeof define !== 'function') {
 define(['when', 'util', 'lodash'], function(when, util, _) {
 
     var ok = function(description) {
-        return description;
+        return '\n- ' + description;
     }
 
     var fail = function(description, message) {
-        return description + '\nF(' + message + ')\n';
+        return '\n* ' + description + ':\n\t' + message;
     }
 
     var check = function(promise, assert) {
@@ -20,7 +20,6 @@ define(['when', 'util', 'lodash'], function(when, util, _) {
         return when(actual(args))
             .always( 
                 function(result) {
-                    console.log("result:", result);
                     return _.isEqual(result, expected)
                     ? when.resolve(ok(description))
                     : when.reject(fail(description, util.inspect(result) + ' doesnt match ' + util.inspect(expected)));  
