@@ -12,13 +12,12 @@ define(['when', 'lodash'], function(when, _) {
         };
     };
 
-    var sdl = function(root) {
+    var sdl = function() {
         return function(obj) {
             obj.src = 'some src';
             obj.test = 'some test';
-            obj.root = root;
             
-            return when(obj);
+            return when.resolve(obj);
         };
     };
 

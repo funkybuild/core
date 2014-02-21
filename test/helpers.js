@@ -5,27 +5,28 @@ if (typeof define !== 'function') {
 define(['when', 'util', 'lodash'], function(when, util, _) {
 
     var ok = function(message) {
-        return ".";
+        return "ok!";
     }
 
     var fail = function(message) {
-        return '\nF(' + util.inspect(message) + ')\n';
+        return '\nF(' + message + ')\n';
     }
 
     var check = function(promise, assert) {
         return when(promise).then(assert, fail).then(ok, fail).always(util.print);
     }
 
-    var equals = function(actual, expected) {
-        return when.all(
-            [actual, expected]
-        ).then(
-            function(arr) {
-                return _.isEqual(arr[0], arr[1])
-                    ? ''
-                    : when.reject(util.inspect(arr[0]) + ' doesnt match ' + util.inspect(arr[1]));  
-            }
-        ).then(ok, fail).always(util.print);};
+    var equals = function(actual, args, expected) {
+        return when(actual(args))
+            .always( 
+                function(result) {
+                    console.log("result:", result);
+                    return _.isEqual(result, expected)
+                    ? when.resolve(ok())
+                    : when.reject(fail(util.inspect(result) + ' doesnt match ' + util.inspect(expected)));  
+                }
+            );
+    };
 
     return {'ok':ok, 'fail': fail, 'check':check, 'equals':equals};
 });

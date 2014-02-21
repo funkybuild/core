@@ -13,10 +13,24 @@ requirejs.config({
 requirejs(
     ['when', 'when/pipeline', 'java', 'lodash', 'util'], 
     function (when, pipe, java, _, helpers, util) {
-        var subproj = java.sdl(__dirname + '/javaroot/subproj');
-        var compile = java.compile({options: ''});
+        var struct = {
+            'war': java.war(collect('*/jar')),
+            'subproj/jar': java.jar(collect('subproj/classes')),
+            'mainproj/jar': java.jar(collect('mainproj/classes')),
+            'mainproj/classes': java.compile(collect('mainproj/'))
+        }
+        var mainwar = 
+            map_parallel([java.jar(), java.compile({options:''})],srcProjs)) ;
+        
+        var subproj = java.sdl({
+            root:__dirname + '/javaroot/subproj',
+            deps: deps('mvn:jar:junit.org:4.2+', 'ivy:jar:whatever'])
+        });
 
-        pipe([subproj, compile], {}) 
+        var compile = java.compile({options: ''});
+        
+        var jar = java.jar();
+        pipe([subproj, compile, jar], {}) 
             .always(console.log);
         
     }
