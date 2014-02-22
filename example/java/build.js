@@ -11,8 +11,9 @@ requirejs.config({
 });
 
 requirejs(
-    ['when', 'when/pipeline', 'java', 'lodash', 'util'], 
-    function (when, pipe, java, _, helpers, util) {
+    ['q', 'java', 'lodash', 'util'], 
+    function (Q, java, _, helpers, util) {
+        //sketches
         var struct = {
             'war': java.war(collect('*/jar')),
             'subproj/jar': java.jar(collect('subproj/classes')),

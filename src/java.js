@@ -2,13 +2,13 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-define(['when', 'lodash'], function(when, _) {
+define(['q', 'lodash'], function(Q, _) {
 
     var src = function(dirs) {
         var d = dirs;
         return function(obj) {
             obj.srcs = _.flatten([d]);
-            return when(obj);
+            return Q.resolve(obj);
         };
     };
 
@@ -17,7 +17,7 @@ define(['when', 'lodash'], function(when, _) {
             obj.src = 'some src';
             obj.test = 'some test';
             
-            return when.resolve(obj);
+            return Q.resolve(obj);
         };
     };
 
@@ -25,7 +25,7 @@ define(['when', 'lodash'], function(when, _) {
         return function(project) {
             var res = _.merge(project, options);
             
-            return when(res);
+            return Q.resolve(res);
         };
     };
         
