@@ -14,8 +14,8 @@ define(['q', 'lodash'], function(Q, _) {
 
     var sdl = function() {
         return function(obj) {
-            obj.src = 'some src';
-            obj.test = 'some test';
+            obj.src = obj.root + '/' + 'src/main/java';
+            obj.test = obj.root + '/' + 'src/test/java';
             
             return Q.resolve(obj);
         };

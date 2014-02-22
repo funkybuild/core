@@ -12,7 +12,12 @@ function (Q, java, _, check, util) {
     check.check([
         
         eq('Can create standard directory layout project', 
-           java.sdl(), {root: '.'}, {root: '.', src:'some src', test:'some test'}),
+           java.sdl(), {root: '.'}, 
+           {
+               root: '.', 
+               src:'./src/main/java', 
+               test:'./src/test/java'
+           }),
         
         eq('Can add source dir', 
            java.src(['.']), {}, {srcs:['.']})
