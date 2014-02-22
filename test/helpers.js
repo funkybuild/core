@@ -5,11 +5,11 @@ if (typeof define !== 'function') {
 define(['when', 'util', 'lodash'], function(when, util, _) {
 
     var ok = function(description) {
-        return '\n- ' + description;
+        return when.resolve('\n- ' + description);
     }
 
     var fail = function(description, message) {
-        return '\n* ' + description + ':\n\t' + message;
+        return when.reject('\n* ' + description + ':\n\t' + message);
     }
 
     var check = function(arr) {
@@ -32,8 +32,8 @@ define(['when', 'util', 'lodash'], function(when, util, _) {
             .always( 
                 function(result) {
                     return _.isEqual(result, expected)
-                    ? when.resolve(ok(description))
-                    : when.reject(fail(description, util.inspect(result) + ' doesnt match ' + util.inspect(expected)));  
+                    ? ok(description)
+                    : fail(description, util.inspect(result) + ' doesn\'t match ' + util.inspect(expected));  
                 }
             );
     };
