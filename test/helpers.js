@@ -2,18 +2,18 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-define(['when', 'util', 'lodash'], function(when, util, _) {
+define(['q', 'util', 'lodash'], function(Q, util, _) {
 
     var ok = function(description) {
-        return when.resolve('\n- ' + description);
+        return Q.resolve('\n- ' + description);
     }
 
     var fail = function(description, message) {
-        return when.reject('\n* ' + description + ':\n\t' + message);
+        return Q.reject('\n* ' + description + ':\n\t' + message);
     }
 
     var check = function(arr) {
-        when.settle(arr).then(function(desc) {
+        Q.allSettled(arr).then(function(desc) {
             var failed = _.any(desc, function(v) {return v.state=='rejected';});
             
             if(failed) util.puts("Failed checks")
@@ -28,8 +28,8 @@ define(['when', 'util', 'lodash'], function(when, util, _) {
     }
 
     var equals = function(description, actual, args, expected) {
-        return when(actual(args))
-            .always( 
+        return Q.when(actual(args))
+            .then( 
                 function(result) {
                     return _.isEqual(result, expected)
                     ? ok(description)

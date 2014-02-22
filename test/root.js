@@ -5,8 +5,8 @@ requirejs.config({
     nodeRequire: require
 });
 
-requirejs(['when', 'when/parallel', 'when/sequence', 'java', 'lodash', '../test/helpers', 'util'], 
-function (when, parallel, seq, java, _, check, util) {
+requirejs(['q', 'when/parallel', 'when/sequence', 'java', 'lodash', '../test/helpers', 'util'], 
+function (Q, parallel, seq, java, _, check, util) {
     var eq = check.equals;
 
     check.check([
