@@ -6,11 +6,15 @@ define(['q', 'util', 'lodash'], function(Q, util, _) {
 
     var ok = function(description) {
         return Q.resolve('\n- ' + description);
-    }
+    };
 
     var fail = function(description, message) {
         return Q.reject('\n* ' + description + ':\n\t' + message);
-    }
+    };
+
+    var fatal = function(m) {
+        console.log("\nSomething went really bad:\n", m);
+    };
 
     var check = function(arr) {
         Q.allSettled(arr).then(function(desc) {
@@ -24,8 +28,8 @@ define(['q', 'util', 'lodash'], function(Q, util, _) {
                     ? util.print(d.reason)
                     : util.print(d.value);
             });
-        }, console.err).then(function() {util.puts('\n---');}, console.err);
-    }
+        }, fatal).then(function() {util.puts('\n---');}, fatal);
+    };
 
     var equals = function(description, actual, args, expected) {
         return Q.when(actual(args))
