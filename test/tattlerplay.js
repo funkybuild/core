@@ -12,7 +12,7 @@ requirejs.config({
 });
 
 requirejs(['q', 'java', 'lodash', 'tattler'], 
-function (Q, java, _, tattler) {
-    
+function (Q, java, _, t) {
+    console.log("Testing tattler...");
 });
 
