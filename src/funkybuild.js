@@ -5,14 +5,14 @@ if (typeof define !== 'function') {
 define(['q', 'lodash'], 
 function (Q,  _) {
     
-    var task = function(id, dep_arr, fn) {
+    var task = function(id, fn, dep_arr) {
         var deferred = Q.defer();
         return {
             id:id, 
             deferred: deferred,
             promise: deferred.promise,
-            deps: fn?dep_arr:[],
-            fn: fn?fn:dep_arr
+            deps: dep_arr||[],
+            fn: fn
         };
     }    
 

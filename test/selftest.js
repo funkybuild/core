@@ -26,7 +26,7 @@ function (Q,  _, t, util) {
     var build = [ 
         t.task('t1', resolving("Task 1")),
         t.task('t2', resolving("Task 2")),
-        t.task('res', ['t1', 't2'], resolving("Result"))
+        t.task('res', resolving("Result"), ['t1', 't2'])
     ]
 
     _.forEach(

@@ -26,7 +26,7 @@ function (Q,  _, t, util) {
     var build = [ 
         t.task('t1', delayedArgAggregator("Task 1")),
         t.task('t2', delayedArgAggregator("Task 2")),
-        t.task('t3', ['t1', 't2'], delayedArgAggregator("Task 3"))
+        t.task('t3', delayedArgAggregator("Task 3"), ['t1', 't2'])
     ]
 
     _.forEach(
