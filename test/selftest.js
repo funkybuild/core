@@ -81,17 +81,36 @@ function (Q,  _, t, util, assert, colors) {
          }, 
          true);
 
-    test("Arguments are propagated", 
+    test("Failing subtask fails build",
+         [
+             t.task('t1', rejecting("Task 1")),
+             t.task('res', resolving("Result"), ['t1'])
+         ], 
+         ['res'], 
+         function(r) {
+             assert.equal(r.name, 'Result', 'Result is root');
+             assert.equal(r.args['0'].ok, false, 'Subtask failed');
+             assert.equal(r.ok, false, 'Root task failed');
+             return r;
+         },
+         true);
+
+
+    test("Root task gets output from subtasks", 
          [
              t.task('t1', resolving("Task 1")),
              t.task('res', resolving("Result"), ['t1'])
          ], 
          ['res'], 
          function(r) {
-             assert.equal(r.name, 'Result', 'Result is root'),
-             assert.equal(r.args['0'].name, 'Task 1', 'Called with Task 1 as argument')
+             assert.equal(r.name, 'Result', 'Result is root');
+             assert.equal(r.args['0'].name, 'Task 1', 'Called with Task 1 as argument');
          });
     
+
+    //test("A function is only called once",
+
+    //test("Can call several root targets",
 
 });
 
