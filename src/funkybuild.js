@@ -19,16 +19,31 @@ function (Q,  _) {
     function wire(obj) {
         return _.forIn(obj, function(val, key) {
             val.run = function() {
-                var ps = _.map(val.deps, 
-                          function(dep) {
-                              obj[dep].run();
-                              return obj[dep].promise;
-                          });
-                Q.all(ps)
-                    .spread(function() {
-                        var args = _.values(arguments);
-                        Q.when(args).spread(val.fn).then(val.deferred.resolve);
-                    });
+                try {
+                    var ps = _.map(val.deps, 
+                                   function(dep) {
+                                       obj[dep].run();
+                                       return obj[dep].promise;
+                                   });
+                    console.log("ps:", ps);
+                    Q.all(ps)
+                        .spread(function() {
+                            var args = _.values(arguments);
+                            console.log("Spread:", args);
+                            Q.when(args)
+                                .spread(val.fn)
+                                .then(
+                                    val.deferred.resolve, 
+                                    val.deferred.reject
+                                );
+                        }, function() {
+                            console.log("Error:", arguments);
+                        });
+                } catch(e) {
+                    console.log("Exception!!", e);
+                    throw e
+                }
+
             };
         });
     }
@@ -40,8 +55,10 @@ function (Q,  _) {
             return acc;
         }, {}));
         return _.map(targets, function(t) {
-            //console.log("run:", t, obj);
+            console.log("run:", t, obj);
             obj[t].run();
+            console.log("has run:", t, obj);
+
             return obj[t].promise;
         }); 
         
