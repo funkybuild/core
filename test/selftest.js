@@ -83,8 +83,6 @@ function (Q,  _, t, util, assert, colors) {
          }, 
          true);
 
-    var build = 
-    
     test("Arguments are propagated", 
          [
              t.task('t1', resolving("Task 1")),
