@@ -88,9 +88,8 @@ function (Q,  _, t, util, assert, colors) {
          ], 
          ['res'], 
          function(r) {
-             assert.equal(r.name, 'Result', 'Result is root');
-             assert.equal(r.args['0'].ok, false, 'Subtask failed');
-             assert.equal(r.ok, false, 'Root task failed');
+             assert.equal(r.ok, false, 'Subtask failed');
+             assert.equal(r.name, 'Task 1', 'Failing task is propagated');
              return r;
          },
          true);
