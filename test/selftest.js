@@ -10,7 +10,7 @@ function (Q,  _, t, util, assert, colors) {
     function resolving(name) {
         var str = name;
         return function() {
-            console.log("Resolving fn:", str, arguments);
+            //console.log("Resolving fn:", str, arguments);
             return Q.resolve({ok:true, name:str, args:arguments});
         };
     };
@@ -18,7 +18,7 @@ function (Q,  _, t, util, assert, colors) {
     function rejecting(name) {
         var str = name;
         return function() {
-            console.log("Rejecting fn:", str, arguments);
+            //console.log("Rejecting fn:", str, arguments);
             return Q.reject({ok:false, name:str, args:arguments});
         };
     };
@@ -45,7 +45,7 @@ function (Q,  _, t, util, assert, colors) {
         _.forEach(
             t.run (build_arr, targets),
             function(p) {
-                console.log("p:", p);
+                //console.log("p:", p);
                 Q.when(p)
                     .then(onSuccess, onError)
                     .then(writeSuccess, writeError);
@@ -61,13 +61,13 @@ function (Q,  _, t, util, assert, colors) {
          [t.task('t', resolving('Single task'))], 
          ['t'], 
          function(r) {
-             console.log("r:", r);
+             //console.log("r:", r);
              assert(r.name==='Single task', 'Single task');
              assert(r.ok===true, 'Task ok');
              return r;
          },
          function(err) {
-             console.log("err:", err);
+             //console.log("err:", err);
              return err;
          });
 
@@ -76,7 +76,7 @@ function (Q,  _, t, util, assert, colors) {
          ['t'], 
          thrower,
          function(r) {
-             console.log("good error:", r);
+             //console.log("good error:", r);
              assert(r.ok===false, 'Build was failed');
              assert(r.name==='Failer', 'Right name');
              return r;

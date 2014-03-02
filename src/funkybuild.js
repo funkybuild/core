@@ -18,38 +18,38 @@ function (Q,  _) {
 
     function wire(obj) {
         return _.forIn(obj, function(val, key) {
-            console.log("wiring", key, val);
+            //console.log("wiring", key, val);
             val.run = function() {
                 try {
-                    console.log("Running...", key, val);
+                    //console.log("Running...", key, val);
                     var ps = _.map(val.deps, 
                                    function(dep) {
                                        obj[dep].run();
                                        return obj[dep].promise;
                                    });
-                    console.log("ps:", ps);
+                    //console.log("ps:", ps);
                     Q.all(ps)
                         .spread(function() {
                             var args = _.values(arguments);
-                            console.log("Spread:", args);
+                            //console.log("Spread:", args);
                             Q.when(args)
                                 .spread(val.fn)
                                 .then(
                                     function(r) {
-                                        console.log("Resolving:", r);
+                                        //console.log("Resolving:", r);
                                         val.deferred.resolve(r);
                                     }, 
                                     function(err) {
-                                        console.log("Rejecting:", err);
+                                        //console.log("Rejecting:", err);
                                         val.deferred.reject(err);
                                     }
                                 );
                         }, function(err) {
-                            console.log("Error wire:", err);
+                            //console.log("Error wire:", err);
                             return err;
                         });
                 } catch(e) {
-                    console.log("Exception!!", e);
+                    //console.log("Exception!!", e);
                     throw e
                 }
 
@@ -64,9 +64,9 @@ function (Q,  _) {
             return acc;
         }, {}));
         return _.map(targets, function(t) {
-            console.log("run:", t, obj[t]);
+            //console.log("run:", t, obj[t]);
             obj[t].run();
-            console.log("has run:", t, obj);
+            //console.log("has run:", t, obj);
             
             return obj[t].promise;
         }); 
