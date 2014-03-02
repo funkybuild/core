@@ -46,6 +46,7 @@ function (Q,  _) {
                                 );
                         }, function(err) {
                             //console.log("Error wire:", err);
+                            val.deferred.reject(err);
                             return err;
                         });
                 } catch(e) {
