@@ -94,6 +94,20 @@ function (Q,  _, t, util, assert, colors) {
          },
          true);
 
+    test("Failing subsubtask fails build",
+         [
+             t.task('t1', rejecting("Task 1")),
+             t.task('t2', resolving("Task 2"), ['t1']),
+             t.task('res', resolving("Result"), ['t2'])
+         ], 
+         ['res'], 
+         function(r) {
+             assert.equal(r.ok, false, 'Subsubtask failed');
+             assert.equal(r.name, 'Task 1', 'Failing task is propagated');
+             return r;
+         },
+         true);
+
 
     test("Root task gets output from subtasks", 
          [
