@@ -5,16 +5,16 @@ requirejs.config({
     nodeRequire: require
 });
 
-requirejs(['q', 'lodash', 'funkybuild'], 
-function (Q,  _, t) {
+requirejs(['q', 'lodash', 'funkybuild', 'util'], 
+function (Q,  _, t, util) {
     function tsk(mess) {
         var str = mess;
-        return function(a, b) {
+        return function() {
             var rand = Math.floor(Math.random()*4001);            
             console.log(str, 'got:', arguments, rand);
             var d = Q.defer();
             Q.delay(rand).done(function() {
-                d.resolve(str + " after " + rand.toString() + " from " + arguments);
+                d.resolve(str + " after " + rand + " from " + arguments);
             });
             return d.promise;
         };
