@@ -35,14 +35,13 @@ function (Q,  _) {
                             Q.when(args)
                                 .spread(val.fn)
                                 .then(
-                                    function() {
-                                        var args = _.values(arguments);
-                                        console.log("Resolving:", args);
-                                        val.deferred.resolve.apply(args);
+                                    function(r) {
+                                        console.log("Resolving:", r);
+                                        val.deferred.resolve(r);
                                     }, 
-                                    function() {
-                                        console.log("Rejecting:", arguments);
-                                        val.deferred.reject.apply(_.values(arguments));
+                                    function(err) {
+                                        console.log("Rejecting:", err);
+                                        val.deferred.reject(err);
                                     }
                                 );
                         }, function(err) {
@@ -65,7 +64,7 @@ function (Q,  _) {
             return acc;
         }, {}));
         return _.map(targets, function(t) {
-            console.log("run:", t, obj);
+            console.log("run:", t, obj[t]);
             obj[t].run();
             console.log("has run:", t, obj);
             
