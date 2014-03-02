@@ -11,12 +11,11 @@
     "when": "~2.8.0",
     "amdefine": "~0.1.0",
     "lodash": "~2.4.1",
-    "tattler": "https://github.com/tattler/core",
     "colors": "~0.6.2"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node test/root.js"
+    "test": "node test/selftest.js"
   },
   "repository": {
     "type": "git",
