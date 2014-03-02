@@ -10,11 +10,12 @@ function (Q,  _, t, util) {
     function tsk(mess) {
         var str = mess;
         return function() {
+            var args = arguments;
             var rand = Math.floor(Math.random()*4001);            
-            console.log(str, 'got:', arguments, rand);
+            console.log(str, 'got:', args, rand);
             var d = Q.defer();
             Q.delay(rand).done(function() {
-                d.resolve(str + " after " + rand + " from " + arguments);
+                d.resolve({name:str, delay:rand, args:args});
             });
             return d.promise;
         };
