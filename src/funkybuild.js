@@ -18,8 +18,10 @@ function (Q,  _) {
 
     function wire(obj) {
         return _.forIn(obj, function(val, key) {
+            console.log("wiring", key, val);
             val.run = function() {
                 try {
+                    console.log("Running...", key, val);
                     var ps = _.map(val.deps, 
                                    function(dep) {
                                        obj[dep].run();
@@ -33,11 +35,19 @@ function (Q,  _) {
                             Q.when(args)
                                 .spread(val.fn)
                                 .then(
-                                    val.deferred.resolve, 
-                                    val.deferred.reject
+                                    function() {
+                                        var args = _.values(arguments);
+                                        console.log("Resolving:", args);
+                                        val.deferred.resolve.apply(args);
+                                    }, 
+                                    function() {
+                                        console.log("Rejecting:", arguments);
+                                        val.deferred.reject.apply(_.values(arguments));
+                                    }
                                 );
-                        }, function() {
-                            console.log("Error:", arguments);
+                        }, function(err) {
+                            console.log("Error wire:", err);
+                            return err;
                         });
                 } catch(e) {
                     console.log("Exception!!", e);
@@ -58,10 +68,9 @@ function (Q,  _) {
             console.log("run:", t, obj);
             obj[t].run();
             console.log("has run:", t, obj);
-
+            
             return obj[t].promise;
         }); 
-        
     }
 
     return {'task':task, 'run':run};

@@ -10,6 +10,7 @@ function (Q,  _, t, util, assert, colors) {
     function resolving(name) {
         var str = name;
         return function() {
+            console.log("Resolving fn:", str, arguments);
             return Q.resolve({ok:true, name:str, args:arguments});
         };
     };
@@ -17,7 +18,7 @@ function (Q,  _, t, util, assert, colors) {
     function rejecting(name) {
         var str = name;
         return function() {
-            console.log("Rejecting:", arguments);
+            console.log("Rejecting fn:", str, arguments);
             return Q.reject({ok:false, name:str, args:arguments});
         };
     };
@@ -27,22 +28,31 @@ function (Q,  _, t, util, assert, colors) {
             console.log("Skipping:".blue, name.substring(2, name.length).blue);
             return;
         }
+
+        var testName = name;
         expectFailure = expectFailure || false;
+
+        var writeError = function(error) {
+            console.log("Error:".red, testName.red, 
+                        '\n', 
+                        util.inspect(error).red);
+        };
+
+        var writeSuccess = function(r){
+            console.log("OK:".green, testName.green);
+        };
+
+        var _writeSuccess = expectFailure?writeError:writeSuccess;
+        var _writeError = expectFailure?writeSuccess:writeError;
+
+
         _.forEach(
             t.run (build_arr, targets),
             function(p) {
+                console.log("p:", p);
                 Q.when(p)
                     .then(onSuccess, onError)
-                    .done(
-                        function(r){
-                            console.log("OK:".green, name.green);
-                        },
-                        function(error) {
-                            console.log("Error:".red, name.red, 
-                                        '\n', 
-                                        util.inspect(error).red);
-                        }
-                    );
+                    .done(_writeSuccess, _writeError);
             }
         );
     }
@@ -52,9 +62,27 @@ function (Q,  _, t, util, assert, colors) {
          [t.task('t', resolving('Single task'))], 
          ['t'], 
          function(r) {
-             assert(r.name==='Single task', 'Single task'),
-             assert(r.ok===true, 'Task ok')
-         }, assert.fail);
+             console.log("r:", r);
+             assert(r.name==='Single task', 'Single task');
+             assert(r.ok===true, 'Task ok');
+             return r;
+         },
+         function(err) {
+             console.log("err:", err);
+             return err;
+         });
+
+    test("//Failing task fails build", 
+         [t.task('t', rejecting('Failer'))], 
+         ['t'], 
+         function(err) {
+             console.log("Error:", err);
+         }, 
+         function(r) {
+             assert(r.ok===false, 'Build was failed'),
+             assert(r.name==='Failer', 'Right name')
+         }, 
+         true);
 
     var build = [ 
         t.task('t1', resolving("Task 1")),
@@ -67,13 +95,6 @@ function (Q,  _, t, util, assert, colors) {
         assert.equal(r.args['1'].name, 'Task 2', 'Called with Task 2 as argument')
     }, assert.fail);
     
-    test("Failing task fails build", 
-         [t.task('t', rejecting('Failer'))], 
-         ['t'], 
-         function(r) {
-             assert(r.name==='Task 1', 'Called with Task 1 as argument'),
-             assert(r.name==='Task 2', 'Called with Task 2 as argument')
-         }, console.log, true);
 
 });
 
