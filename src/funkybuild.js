@@ -7,18 +7,14 @@ function (Q,  _) {
     
     var task = function(id, dep_arr, fn) {
         var deferred = Q.defer();
-        var ret = {
+        return {
             id:id, 
             deferred: deferred,
-            promise: deferred.promise
+            promise: deferred.promise,
+            deps: fn?dep_arr:[],
+            fn: fn?fn:dep_arr
         };
-        ret.deps = fn?dep_arr:[];
-        ret.fn =  fn?fn:dep_arr;
-
-        return ret;
-    }
-
-    
+    }    
 
     function wire(obj) {
         return _.forIn(obj, function(val, key) {

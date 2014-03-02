@@ -10,10 +10,8 @@ function (Q,  _, t) {
     function tsk(mess) {
         var str = mess;
         return function(a, b) {
-            
-            var args = arguments;
-            var rand = Math.floor(Math.random()*10001);            
-            console.log(str, 'got:', args, rand);
+            var rand = Math.floor(Math.random()*4001);            
+            console.log(str, 'got:', arguments, rand);
             var d = Q.defer();
             Q.delay(rand).done(function() {
                 d.resolve(str + " after " + rand.toString() + " from " + arguments);
