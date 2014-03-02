@@ -35,7 +35,6 @@ function (Q,  _, t, util) {
     _.forEach(
         res,
         function(p) {
-            console.log("Each:", p);
             Q.when(p)
                 .then(
                     function(r){
