@@ -40,7 +40,7 @@ function (Q,  _) {
             return acc;
         }, {}));
         return _.map(targets, function(t) {
-            console.log("run:", t, obj);
+            //console.log("run:", t, obj);
             obj[t].run();
             return obj[t].promise;
         }); 
