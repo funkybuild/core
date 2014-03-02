@@ -83,16 +83,19 @@ function (Q,  _, t, util, assert, colors) {
          }, 
          true);
 
-    var build = [ 
-        t.task('t1', resolving("Task 1")),
-        t.task('t2', resolving("Task 2")),
-        t.task('res', resolving("Result"), ['t1', 't2'])
-    ]
+    var build = 
     
-    test("Arguments are propagated", build, ['res'], function(r) {
-        assert.equal(r.args['0'].name, 'Task 1', 'Called with Task 1 as argument'),
-        assert.equal(r.args['1'].name, 'Task 2', 'Called with Task 2 as argument')
-    }, thrower);
+    test("Arguments are propagated", 
+         [
+             t.task('t1', resolving("Task 1")),
+             t.task('res', resolving("Result"), ['t1'])
+         ], 
+         ['res'], 
+         function(r) {
+             assert.equal(r.name, 'Result', 'Result is root'),
+             assert.equal(r.args['0'].name, 'Task 1', 'Called with Task 1 as argument')
+         }, 
+         thrower);
     
 
 });
