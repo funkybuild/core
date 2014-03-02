@@ -45,7 +45,7 @@ function (Q,  _) {
                                     }
                                 );
                         }, function(err) {
-                            //console.log("Error wire:", err);
+                            console.log("Error wire:", err);
                             return err;
                         });
                 } catch(e) {
