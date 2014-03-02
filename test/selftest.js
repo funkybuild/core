@@ -23,7 +23,7 @@ function (Q,  _, t, util, assert, colors) {
         };
     };
 
-    function test(name, build_arr, targets, onSuccess, onError, expectFailure) {
+    function test(name, build_arr, targets, assertion, expectFailure) {
         if(name.substring(0,2)==='//') {
             console.log("Skipping:".blue, name.substring(2, name.length).blue);
             return;
@@ -41,13 +41,16 @@ function (Q,  _, t, util, assert, colors) {
         var writeSuccess = function(r){
             console.log("OK:".green, testName.green);
         };
-
+        
         _.forEach(
             t.run (build_arr, targets),
             function(p) {
                 //console.log("p:", p);
                 Q.when(p)
-                    .then(onSuccess, onError)
+                    .then(
+                        expectFailure?thrower:assertion, 
+                        expectFailure?assertion:thrower
+                    )
                     .then(writeSuccess, writeError);
             }
         );
@@ -62,23 +65,18 @@ function (Q,  _, t, util, assert, colors) {
          ['t'], 
          function(r) {
              //console.log("r:", r);
-             assert(r.name==='Single task', 'Single task');
-             assert(r.ok===true, 'Task ok');
+             assert.equal(r.name, 'Single task', 'Single task');
+             assert.equal(r.ok, true, 'Task ok');
              return r;
-         },
-         function(err) {
-             //console.log("err:", err);
-             return err;
          });
 
     test("Failing task fails build", 
          [t.task('t', rejecting('Failer'))], 
          ['t'], 
-         thrower,
          function(r) {
              //console.log("good error:", r);
-             assert(r.ok===false, 'Build was failed');
-             assert(r.name==='Failer', 'Right name');
+             assert.equal(r.ok, false, 'Build was failed');
+             assert.equal(r.name, 'Failer', 'Right name');
              return r;
          }, 
          true);
@@ -92,8 +90,7 @@ function (Q,  _, t, util, assert, colors) {
          function(r) {
              assert.equal(r.name, 'Result', 'Result is root'),
              assert.equal(r.args['0'].name, 'Task 1', 'Called with Task 1 as argument')
-         }, 
-         thrower);
+         });
     
 
 });
