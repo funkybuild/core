@@ -42,35 +42,33 @@ function (Q,  _, t, util, assert, colors) {
             console.log("OK:".green, testName.green);
         };
         
-        _.forEach(
-            t.run (build_arr, targets),
-            function(p) {
-                //console.log("p:", p);
-                Q.when(p)
-                    .then(
-                        expectFailure?thrower:assertion, 
-                        expectFailure?assertion:thrower
-                    )
-                    .then(writeSuccess, writeError);
-            }
-        );
+
+        var p = t.run (build_arr, targets);
+        //console.log("p:", p);
+        Q.all(p)
+            .spread(
+                expectFailure?thrower:assertion, 
+                expectFailure?assertion:thrower
+            )
+            .then(writeSuccess, writeError);
     }
 
     function thrower(err) {
         throw err;
     }
 
-    test("Can run single task", 
+    var i = "";
+    test(i+"Can run single task", 
          [t.task('t', resolving('Single task'))], 
          ['t'], 
          function(r) {
-             //console.log("r:", r);
+             //console.log("r Can run single task:", r);
              assert.equal(r.name, 'Single task', 'Single task');
              assert.equal(r.ok, true, 'Task ok');
              return r;
          });
 
-    test("Failing task fails build", 
+    test(i+"Failing task fails build", 
          [t.task('t', rejecting('Failer'))], 
          ['t'], 
          function(r) {
@@ -81,7 +79,7 @@ function (Q,  _, t, util, assert, colors) {
          }, 
          true);
 
-    test("Failing subtask fails build",
+    test(i+"Failing subtask fails build",
          [
              t.task('t1', rejecting("Task 1")),
              t.task('res', resolving("Result"), ['t1'])
@@ -94,7 +92,7 @@ function (Q,  _, t, util, assert, colors) {
          },
          true);
 
-    test("Failing subsubtask fails build",
+    test(i+"Failing subsubtask fails build",
          [
              t.task('t1', rejecting("Task 1")),
              t.task('t2', resolving("Task 2"), ['t1']),
@@ -109,21 +107,50 @@ function (Q,  _, t, util, assert, colors) {
          true);
 
 
-    test("Root task gets output from subtasks", 
+    test(i+"Root task gets output from subtasks", 
          [
              t.task('t1', resolving("Task 1")),
              t.task('res', resolving("Result"), ['t1'])
          ], 
          ['res'], 
          function(r) {
+             //console.log("r:", r);
              assert.equal(r.name, 'Result', 'Result is root');
              assert.equal(r.args['0'].name, 'Task 1', 'Called with Task 1 as argument');
          });
     
 
-    //test("A function is only called once",
+    test(i+"Can call several root targets",
+         [
+             t.task('res1', resolving("Result 1")),
+             t.task('res2', resolving("Result 2"))
+         ], 
+         ['res1', 'res2'], 
+         function(r1, r2) {
+             //console.log("r:", r1, r2);
+             assert.equal(r1.name, 'Result 1', 'First result');
+             assert.equal(r2.name, 'Result 2', 'Second result');
+         });
 
-    //test("Can call several root targets",
+    var calls = [];
+    test("A function is only called once",
+         [
+             t.task('t1', function(p) {
+                 calls[calls.length] = p;
+                 return Q.resolve("Got " + p);
+             }),
+             t.task('res1', resolving("Result 1"), ['t1']),
+             t.task('res2', resolving("Result 2"), ['t1'])
+         ], 
+         ['res1', 'res2'], 
+         function(r1, r2) {
+             //console.log("r:", r1, r2);
+             assert.equal(calls.length, 1, 'Double depended task is called once');
+             assert.equal(r1.name, 'Result 1', 'First result');
+             assert.equal(r2.name, 'Result 2', 'Second result');
+         });
+
+
 
     //test("Non existent subtask is reported as error",
 
