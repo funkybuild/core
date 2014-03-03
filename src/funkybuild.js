@@ -64,6 +64,7 @@ function (Q,  _) {
             acc[val.id] = val; //curr?[curr, val]:[val]; 
             return acc;
         }, {}));
+        //console.log( "Wired:", obj);
         return _.map(targets, function(t) {
             //console.log("run:", t, obj[t]);
             obj[t].run();
