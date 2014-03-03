@@ -125,5 +125,13 @@ function (Q,  _, t, util, assert, colors) {
 
     //test("Can call several root targets",
 
+    //test("Non existent subtask is reported as error",
+
+    //test("Event stream for wiring",
+
+    //test("Event stream for execution",
+
+    //test("Overridden tasks are reported",
+
 });
 
