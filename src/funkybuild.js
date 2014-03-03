@@ -19,7 +19,7 @@ function (Q,  _) {
     function wire(obj) {
         return _.forIn(obj, function(val, key) {
             //console.log("wiring", key, val);
-            val.run = function() {
+            val.run = _.once(function() {
                 try {
                     //console.log("Running...", key, val);
                     var ps = _.map(val.deps, 
@@ -54,7 +54,7 @@ function (Q,  _) {
                     throw e
                 }
 
-            };
+            });
         });
     }
 

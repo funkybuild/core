@@ -132,7 +132,25 @@ function (Q,  _, t, util, assert, colors) {
              assert.equal(r2.name, 'Result 2', 'Second result');
          });
 
-    //test("A function is only called once",
+    var calls = [];
+    test("A function is only called once",
+         [
+             t.task('t1', function(p) {
+                 calls[calls.length] = p;
+                 return Q.resolve("Got " + p);
+             }),
+             t.task('res1', resolving("Result 1"), ['t1']),
+             t.task('res2', resolving("Result 2"), ['t1'])
+         ], 
+         ['res1', 'res2'], 
+         function(r1, r2) {
+             //console.log("r:", r1, r2);
+             assert.equal(calls.length, 1, 'Double depended task is called once');
+             assert.equal(r1.name, 'Result 1', 'First result');
+             assert.equal(r2.name, 'Result 2', 'Second result');
+         });
+
+
 
     //test("Non existent subtask is reported as error",
 
