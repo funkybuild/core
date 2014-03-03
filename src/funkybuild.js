@@ -20,40 +20,34 @@ function (Q,  _) {
         return _.forIn(obj, function(val, key) {
             //console.log("wiring", key, val);
             val.run = _.once(function() {
-                try {
-                    //console.log("Running...", key, val);
-                    var ps = _.map(val.deps, 
-                                   function(dep) {
-                                       obj[dep].run();
-                                       return obj[dep].promise;
-                                   });
-                    //console.log("ps:", ps);
-                    Q.all(ps)
-                        .spread(function() {
-                            var args = _.values(arguments);
-                            //console.log("Spread:", args);
-                            Q.when(args)
-                                .spread(val.fn)
-                                .then(
-                                    function(r) {
-                                        //console.log("Resolving:", r);
-                                        val.deferred.resolve(r);
-                                    }, 
-                                    function(err) {
-                                        //console.log("Rejecting:", err);
-                                        val.deferred.reject(err);
-                                    }
-                                );
-                        }, function(err) {
-                            //console.log("Error wire:", err);
-                            val.deferred.reject(err);
-                            return err;
-                        });
-                } catch(e) {
-                    //console.log("Exception!!", e);
-                    throw e
-                }
-
+                //console.log("Running...", key, val);
+                var ps = _.map(val.deps, 
+                               function(dep) {
+                                   obj[dep].run();
+                                   return obj[dep].promise;
+                               });
+                //console.log("ps:", ps);
+                Q.all(ps)
+                    .spread(function() {
+                        var args = _.values(arguments);
+                        //console.log("Spread:", args);
+                        Q.when(args)
+                            .spread(val.fn)
+                            .then(
+                                function(r) {
+                                    //console.log("Resolving:", r);
+                                    val.deferred.resolve(r);
+                                }, 
+                                function(err) {
+                                    //console.log("Rejecting:", err);
+                                    val.deferred.reject(err);
+                                }
+                            );
+                    }, function(err) {
+                        //console.log("Error wire:", err);
+                        val.deferred.reject(err);
+                        return err;
+                    });
             });
         });
     }
