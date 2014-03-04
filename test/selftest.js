@@ -133,7 +133,7 @@ function (Q,  _, t, util, assert, colors) {
          });
 
     var calls = [];
-    test("A function is only called once",
+    test(i+"A function is only called once",
          [
              t.task('t1', function(p) {
                  calls[calls.length] = p;
@@ -152,7 +152,26 @@ function (Q,  _, t, util, assert, colors) {
 
 
 
-    //test("Non existent subtask is reported as error",
+    test(i+"Non existent task is reported as error",
+         [t.task('othertask', resolving('Elusive task'))], 
+         ['nonexisting'], 
+         function(r) {
+             //console.log("good error:", r);
+             assert.equal(r.substring(0,28), 'Cannot find task nonexisting', 'Build was failed');
+             return r;
+         }, 
+         true);
+
+    test(i+"Non existent subtask is reported as error",
+         [t.task('othertask', resolving('Elusive task')), 
+         t.task('res', resolving('Task dep on nonexistent'), ['nonexisting'])], 
+         ['res'], 
+         function(r) {
+             //console.log("good error:", r);
+             assert.equal(r.substring(0,28), 'Cannot find task nonexisting', 'Build was failed');
+             return r;
+         }, 
+         true);
 
     //test("Event stream for wiring",
 
