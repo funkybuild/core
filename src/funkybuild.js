@@ -2,8 +2,8 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-define(['q', 'lodash'], 
-function (Q,  _) {
+define(['q', 'lodash', 'util'], 
+function (Q, _, util) {
     
     var task = function(id, fn, dep_arr) {
         var deferred = Q.defer();
@@ -61,6 +61,7 @@ function (Q,  _) {
         //console.log( "Wired:", obj);
         return _.map(targets, function(t) {
             //console.log("run:", t, obj[t]);
+            if(!obj[t]) return Q.reject('Cannot find task ' + t + ' in ' + util.inspect(obj));
             obj[t].run();
             //console.log("has run:", t, obj);
             
