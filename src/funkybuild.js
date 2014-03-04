@@ -23,6 +23,7 @@ function (Q, _, util) {
                 //console.log("Running...", key, val);
                 var ps = _.map(val.deps, 
                                function(dep) {
+                                   if(!obj[dep]) return Q.reject('Cannot find task ' + dep + ' in ' + util.inspect(obj));
                                    obj[dep].run();
                                    return obj[dep].promise;
                                });
